@@ -1,0 +1,31 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: security-controller
+  namespace: k8s-security-system
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: security-controller
+  template:
+    metadata:
+      labels:
+        app: security-controller
+    spec:
+      serviceAccountName: controller-sa
+      containers:
+        - name: controller
+          image: myorg/security-controller:latest
+          env:
+            - name: BASELINE_CONFIGMAP
+              value: "baseline-policies"
+          ports:
+            - containerPort: 8080
+          resources:
+            requests:
+              memory: "128Mi"
+              cpu: "100m"
+            limits:
+              memory: "256Mi"
+              cpu: "500m"

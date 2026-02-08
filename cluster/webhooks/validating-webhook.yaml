@@ -1,0 +1,19 @@
+apiVersion: admissionregistration.k8s.io/v1
+kind: ValidatingWebhookConfiguration
+metadata:
+  name: security-webhook
+webhooks:
+  - name: validate.k8s-security-system.local
+    clientConfig:
+      service:
+        name: security-webhook-svc
+        namespace: k8s-security-system
+        path: "/validate"
+      caBundle: <YOUR-CA-BUNDLE-HERE>
+    rules:
+      - operations: ["CREATE", "UPDATE"]
+        apiGroups: ["*"]
+        apiVersions: ["*"]
+        resources: ["pods", "deployments"]
+    failurePolicy: Fail
+    admissionReviewVersions: ["v1", "v1beta1"]

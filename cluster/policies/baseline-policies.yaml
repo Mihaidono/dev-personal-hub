@@ -1,0 +1,12 @@
+apiVersion: v1
+kind: ConfigMap
+metadata:
+  name: myapp
+  namespace: k8s-security-system
+data:
+  allowed-ports: "80,443"
+  privileged: "false"
+  runAsNonRoot: "true"
+  approved-images: |
+    nginx:1.25
+    myorg/controller:latest
