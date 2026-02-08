@@ -1,12 +1,11 @@
-# syntax=docker/dockerfile:1
+# syntax=docker.io/docker/dockerfile:1
 
-# Base image
 FROM node:22-alpine AS base
 WORKDIR /app
 
-# Install dependencies
+# Install build dependencies
 FROM base AS deps
-RUN apk add --no-cache libc6-compat python3 g++ make
+RUN apk add --no-cache python3 g++ make libc6-compat
 COPY package.json package-lock.json ./
 RUN npm ci --legacy-peer-deps
 
@@ -22,22 +21,24 @@ RUN npm run build
 FROM node:22-alpine AS runner
 WORKDIR /app
 
-# Create non-root user
+ENV NODE_ENV=production
+ENV NEXT_TELEMETRY_DISABLED=1
+
+# Add a non-root user
 RUN addgroup --system --gid 1001 nodejs
 RUN adduser --system --uid 1001 nextjs
 
-ENV NODE_ENV=production
-ENV NEXT_TELEMETRY_DISABLED=1
-ENV PORT=3000
-ENV HOSTNAME=0.0.0.0
+# Copy only production deps and built files
+COPY --from=builder /app/package.json ./package.json
+COPY --from=builder /app/package-lock.json ./package-lock.json
+RUN npm ci --production --legacy-peer-deps
 
-# Copy build artifacts
-COPY --from=builder /app/package.json ./
 COPY --from=builder /app/.next ./.next
 COPY --from=builder /app/public ./public
-COPY --from=builder /app/node_modules ./node_modules
 
 USER nextjs
 EXPOSE 3000
+ENV PORT=3000
+ENV HOSTNAME="0.0.0.0"
 
 CMD ["npm", "start"]
