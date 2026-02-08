@@ -1,36 +1,43 @@
-# Stage 1: Build
-FROM node:20-alpine AS builder
+# syntax=docker/dockerfile:1
 
-# Set working directory
+# Base image
+FROM node:22-alpine AS base
 WORKDIR /app
 
-# Copy package files and install dependencies
-COPY package.json package-lock.json* pnpm-lock.yaml* ./
+# Install dependencies
+FROM base AS deps
+RUN apk add --no-cache libc6-compat python3 g++ make
+COPY package.json package-lock.json ./
 RUN npm ci --legacy-peer-deps
 
-# Copy all project files
+# Build the app
+FROM base AS builder
+WORKDIR /app
+COPY --from=deps /app/node_modules ./node_modules
 COPY . .
-
-# Build Next.js app
+ENV NEXT_TELEMETRY_DISABLED=1
 RUN npm run build
 
-# Stage 2: Production
-FROM node:20-alpine AS runner
-
+# Production image
+FROM node:22-alpine AS runner
 WORKDIR /app
 
-# Install production dependencies only
-COPY package.json package-lock.json* pnpm-lock.yaml* ./
-RUN npm ci --production --legacy-peer-deps
+# Create non-root user
+RUN addgroup --system --gid 1001 nodejs
+RUN adduser --system --uid 1001 nextjs
 
-# Copy built Next.js files
+ENV NODE_ENV=production
+ENV NEXT_TELEMETRY_DISABLED=1
+ENV PORT=3000
+ENV HOSTNAME=0.0.0.0
+
+# Copy build artifacts
+COPY --from=builder /app/package.json ./
 COPY --from=builder /app/.next ./.next
 COPY --from=builder /app/public ./public
-COPY --from=builder /app/next.config.js ./next.config.js
-COPY --from=builder /app/package.json ./package.json
+COPY --from=builder /app/node_modules ./node_modules
 
-# Expose port
+USER nextjs
 EXPOSE 3000
 
-# Start Next.js server
-CMD ["npm", "run", "start"]
+CMD ["npm", "start"]
