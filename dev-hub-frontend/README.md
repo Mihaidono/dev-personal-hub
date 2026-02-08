@@ -9,11 +9,9 @@ This is the **frontend interface** for the Dev Hub - the central hub of the appl
 
 ## Features
 
-- **Service Management:** Add, edit, or remove services from the hub.
 - **Service Interaction:** Trigger actions or view data from connected services.
 - **Real-Time Updates:** UI reflects changes instantly as services update.
-- **Search & Filter:** Quickly find services and sort them by type or status.
-- **Extensible:** Designed to support new services with minimal effort.
+- **Extensible:** Designed to support new services with minimal effort (atleast that's what I'm hoping for in the future).
 
 ## Tech Stack
 
