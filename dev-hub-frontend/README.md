@@ -1,36 +1,23 @@
-This is a [Next.js](https://nextjs.org) project bootstrapped with [`create-next-app`](https://nextjs.org/docs/app/api-reference/cli/create-next-app).
+# Dev Hub Frontend
 
-## Getting Started
+This is the **frontend interface** for the Dev Hub - the central hub of the application where users can interact with their registered services.
 
-First, run the development server:
+## Overview
 
-```bash
-npm run dev
-# or
-yarn dev
-# or
-pnpm dev
-# or
-bun dev
-```
+- Provides a **dashboard-style interface** for viewing and interacting with all connected services.
+- Responsive design for **desktop and mobile**.
 
-Open [http://localhost:3000](http://localhost:3000) with your browser to see the result.
+## Features
 
-You can start editing the page by modifying `app/page.tsx`. The page auto-updates as you edit the file.
+- **Service Management:** Add, edit, or remove services from the hub.
+- **Service Interaction:** Trigger actions or view data from connected services.
+- **Real-Time Updates:** UI reflects changes instantly as services update.
+- **Search & Filter:** Quickly find services and sort them by type or status.
+- **Extensible:** Designed to support new services with minimal effort.
 
-This project uses [`next/font`](https://nextjs.org/docs/app/building-your-application/optimizing/fonts) to automatically optimize and load [Geist](https://vercel.com/font), a new font family for Vercel.
+## Tech Stack
 
-## Learn More
-
-To learn more about Next.js, take a look at the following resources:
-
-- [Next.js Documentation](https://nextjs.org/docs) - learn about Next.js features and API.
-- [Learn Next.js](https://nextjs.org/learn) - an interactive Next.js tutorial.
-
-You can check out [the Next.js GitHub repository](https://github.com/vercel/next.js) - your feedback and contributions are welcome!
-
-## Deploy on Vercel
-
-The easiest way to deploy your Next.js app is to use the [Vercel Platform](https://vercel.com/new?utm_medium=default-template&filter=next.js&utm_source=create-next-app&utm_campaign=create-next-app-readme) from the creators of Next.js.
-
-Check out our [Next.js deployment documentation](https://nextjs.org/docs/app/building-your-application/deploying) for more details.
+- **Next.js 16** – SSR & frontend routing
+- **Shadcn** – UI components
+- **Tailwind CSS** – Styling
+- **Framer Motion** – Animations and transitions
